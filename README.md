@@ -1,2 +1,2 @@
-# random-quote-generator
+# Random Quote Generator
  My first techdegree project
