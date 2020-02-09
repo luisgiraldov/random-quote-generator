@@ -168,3 +168,12 @@ function printQuote(){
 ***/
 
 document.getElementById('load-quote').addEventListener("click", printQuote, false);
+
+/***
+ * Change quote every 20s
+ * 
+***/
+function changeQuote(){
+  setInterval(printQuote, 10000);
+}
+changeQuote();
