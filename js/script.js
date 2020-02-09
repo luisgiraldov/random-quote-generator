@@ -11,7 +11,7 @@ project 1 - A Random Quote Generator
 /*** 
  * `quotes` array 
 ***/
-const quotesArray = [
+const quotes = [
   {
     quote : "It's not what happens to us, but our response to what happens to us that hurts us",
     source : "Stephen R. Covey",
@@ -129,7 +129,7 @@ function getRandomNumber(max){
  * returns an object with data containing quotes and color for the background
 ***/
 function getRandomQuote(){
-  return quotesArray[getRandomNumber(quotesArray)];
+  return quotes[getRandomNumber(quotes)];
 }
 
 /***
