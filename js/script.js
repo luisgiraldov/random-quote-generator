@@ -137,8 +137,8 @@ function getRandomQuote(){
  * Change the Body's background color based on a random number
 ***/
 function changeColor(){
-  let body = document.getElementsByTagName('BODY')[0];
-  let color = colors[getRandomNumber(colors)];
+  const body = document.getElementsByTagName('BODY')[0];
+  const color = colors[getRandomNumber(colors)];
   body.style.backgroundColor = color;
 }
 
@@ -183,7 +183,7 @@ function printQuote(){
  * User jfriend00
 ***/
 function Timer(fn, t) {
-  var timerObj = setInterval(fn, t);
+  let timerObj = setInterval(fn, t);
 
   this.stop = function() {
       if (timerObj) {
