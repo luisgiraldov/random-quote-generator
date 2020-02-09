@@ -3,10 +3,10 @@ Treehouse FSJS Techdegree:
 project 1 - A Random Quote Generator
 ******************************************/
 
-// For assistance: 
-  // Check the "Project Resources" section of the project instructions
-  // Reach out in your Slack community - https://treehouse-fsjs-102.slack.com/app_redirect?channel=chit-chat
-
+/*** 
+ * IIFE to not clutter the Global Object
+***/
+(function(){
 
 /*** 
  * `quotes` array 
@@ -93,6 +93,9 @@ const quotesArray = [
   }
 ];
 
+/*** 
+ * `colors` array 
+***/
 const colors = [
   "#2D3EC2", 
   "#1D2980",
@@ -113,67 +116,114 @@ const colors = [
 
 /***
  * `getRandomNumber` function
+ * returns a random number
+ * @param {array} max - The array that needs the random number is used to calculate the maximun value
+ * The number will vary between 0 and max - 1
 ***/
 function getRandomNumber(max){
   return Math.floor(Math.random() * max.length);
 }
+
 /***
  * `getRandomQuote` function
+ * returns an object with data containing quotes and color for the background
 ***/
 function getRandomQuote(){
-  return {
-    data : quotesArray[getRandomNumber(quotesArray)],
-    color : colors[getRandomNumber(colors)]
-  }; 
-  
+  return quotesArray[getRandomNumber(quotesArray)];
 }
+
+/***
+ * `changeColor` function
+ * Change the Body's background color based on a random number
+***/
+function changeColor(){
+  let body = document.getElementsByTagName('BODY')[0];
+  let color = colors[getRandomNumber(colors)];
+  body.style.backgroundColor = color;
+}
+
 /***
  * `printQuote` function
+ * Display the quote and its respective citation, year, tags if included in the object
 ***/
 function printQuote(){
   let quoteObject = getRandomQuote();
-  let body = document.getElementsByTagName('BODY')[0];
-  let quoteHtml= `<p class = "quote">${quoteObject.data.quote}</p>
-                  <p class = "source">${quoteObject.data.source}`;
+  let quoteHtml= `<p class = "quote">${quoteObject.quote}</p>
+                  <p class = "source">${quoteObject.source}`;
   
-  if(quoteObject.data.citation){
-    quoteHtml += `<span class = "citation">${quoteObject.data.citation}</span>`;
+  if(quoteObject.citation){
+    quoteHtml += `<span class = "citation">${quoteObject.citation}</span>`;
   }
 
-  if(quoteObject.data.year){
-    quoteHtml += `<span class = "year">${quoteObject.data.year}</span>`;
+  if(quoteObject.year){
+    quoteHtml += `<span class = "year">${quoteObject.year}</span>`;
   }
  
-  if(quoteObject.data.tags && Array.isArray(quoteObject.data.tags)){
+  if(quoteObject.tags && Array.isArray(quoteObject.tags)){
     quoteHtml += `<span class = "full-width">`;
-    quoteObject.data.tags.forEach(element => {
+    quoteObject.tags.forEach(element => {
       quoteHtml += `<span class = "tag">${element}</span>`;
     });
     quoteHtml += `</span>`;
     
-  } else if(quoteObject.data.tags){
-    quoteHtml += `<span class = "tag full-width">${quoteObject.data.tags}</span>`;
+  } else if(quoteObject.tags){
+    quoteHtml += `<span class = "tag full-width">${quoteObject.tags}</span>`;
   }
 
   quoteHtml += `</P>`;
-
-  body.style.backgroundColor = quoteObject.color;
-  document.getElementById("quote-box").innerHTML = quoteHtml;
-  return "done";
+  changeColor();
+  return document.getElementById("quote-box").innerHTML = quoteHtml;
 }
+
+/***
+ * Timer object that offers a reset feature
+ * @param {function} fn callback function to execute after the time interval has been reached
+ * @param {Number} t number to represent the time interval
+ * code taken from https://stackoverflow.com/questions/8126466/how-do-i-reset-the-setinterval-timer
+ * User jfriend00
+***/
+function Timer(fn, t) {
+  var timerObj = setInterval(fn, t);
+
+  this.stop = function() {
+      if (timerObj) {
+          clearInterval(timerObj);
+          timerObj = null;
+      }
+      return this;
+  }
+
+  // start timer using current settings (if it's not already running)
+  this.start = function() {
+      if (!timerObj) {
+          this.stop();
+          timerObj = setInterval(fn, t);
+      }
+      return this;
+  }
+
+  // start with new or original interval, stop current interval
+  this.reset = function(newT = t) {
+      t = newT;
+      return this.stop().start();
+  }
+}
+
+/***
+ * Change quote every 10s
+ * 
+***/
+const timer = new Timer(printQuote, 10000);
+timer.start();
 
 /***
  * click event listener for the print quote button
  * DO NOT CHANGE THE CODE BELOW!!
 ***/
 
-document.getElementById('load-quote').addEventListener("click", printQuote, false);
+document.getElementById('load-quote').addEventListener("click", function(){
+  printQuote();
+  timer.reset();
+}, false);
 
-/***
- * Change quote every 20s
- * 
-***/
-function changeQuote(){
-  setInterval(printQuote, 10000);
-}
-changeQuote();
+})();
